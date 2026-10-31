@@ -1,0 +1,63 @@
+{
+  "name": "parakeet-local-assistant",
+  "version": "1.0.0",
+  "description": "A local-first desktop voice assistant prototype using faster-whisper and Ollama.",
+  "main": "electron/main.cjs",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "build": "vite build",
+    "start": "electron .",
+    "test": "node --test",
+    "dist:win": "npm run build && electron-builder --win nsis"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.1",
+    "vite": "^8.3.5",
+    "wait-on": "^8.0.2"
+  },
+  "build": {
+    "appId": "com.devpatel.parakeetlocalassistant",
+    "productName": "Parakeet Local Assistant",
+    "asar": true,
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "backend",
+        "to": "backend",
+        "filter": [
+          "transcribe.py",
+          "requirements.txt"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=10"
+  }
+}
